@@ -8,12 +8,17 @@ function get_links($url) {
     $xml->loadHTMLFile($url);
     #Empty array to hold all links to return
     $links = array();
+
     #Loop through each <a> tag in the dom and add it to the link array
     foreach($xml->getElementsByTagName('a') as $link) {
-        array_push($links, $link->getAttribute('href'));
-        #$links[] = array('url' => $link->getAttribute('href'), 'text' => $link->nodeValue);
-        #Just ignore the above commented line
+	if(!in_array($link->getAttribute('href'), $links)) {
+
+        	array_push($links, $link->getAttribute('href'));
+	        #$links[] = array('url' => $link->getAttribute('href'), 'text' => $link->nodeValue);
+        	#Just ignore the above commented line
+	}
     }
+
     //Return the links
     return $links;
 }
