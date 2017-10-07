@@ -1,10 +1,10 @@
 <?php
-#$seed_url = "https://tusharagey.github.io/Test";
-$seed_url = "http://www.coep.org.in/";
+$seed_url = "https://tusharagey.github.io/Test";
+#$seed_url = "http://www.coep.org.in";
 
 #Empty array to hold all links to return
 $links = array();
-
+$crawling_depth = 100; #manual definition of crawling depth
 function get_links($url, $links) {
     #Create a new DOM Document to hold our webpage structure
     $xml = new DOMDocument();
@@ -17,10 +17,18 @@ function get_links($url, $links) {
     	#echo $urlname;
     	if(!in_array($urlname, $links)) {
     		global $seed_url;
-    		$absolute_url = $seed_url . '/' . $urlname;
+            $absolute_url = "";
+            if (strpos($urlname, 'http') !== false) { #if URL contains http or https, its absolute url. don't modify
+                $absolute_url = $urlname;
+            }
+            else{ 
+                $absolute_url = $seed_url . '/' . $urlname;
+            }
     		#echo $absolute_url;
-            array_push($links, $absolute_url);
-            echo $absolute_url;
+            if($absolute_url[0] != '#'){ #if URL is anchor tag, then ignore because it eventually referes the same page.
+                array_push($links, $absolute_url);
+                echo $absolute_url;
+            }
     	    #$links[] = array('url' => $link->getAttribute('href'), 'text' => $link->nodeValue);
             #Just ignore the above commented line
     	}
@@ -44,7 +52,7 @@ $arrlength = count($links);
 
 $myfile = fopen("urls.txt", "w");
 
-for($x = 0; $x < $arrlength; $x++) {
+for($x = 0; $x < $arrlength && $x < $crawling_depth; $x++) {
     #echo $links[$x];
     fwrite($myfile, $links[$x]);
     fwrite($myfile, "\n");
