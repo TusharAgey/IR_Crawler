@@ -1,6 +1,6 @@
 <?php
-$seed_url = "https://tusharagey.github.io/Test";
-#$seed_url = "http://www.coep.org.in";
+#$seed_url = "https://tusharagey.github.io/Test";
+$seed_url = "http://www.coep.org.in";
 
 $links = array();	#Empty array to hold all links to return
 $crawling_depth = 100; #manual definition of crawling depth
@@ -26,15 +26,18 @@ function get_links($url, $links) {
                 $absolute_url = $urlname;
             }
             else{
-            	#if($urlname[strlen($string) - 1] == ','){
-            	#}
-            	#else{
-            	#}
+            	/*if($urlname[strlen($urlname) - 1] == '/'){		# If the relative url ends with a '/', don't add that '/'
+								# This probably caused some double '/'s in url which we saw that day in lab
+			$absolute_url = $seed_url . '/' . rtrim($urlname, '/');
+            	}
+            	else{
+			$absolute_url = $seed_url . '/' . $urlname;
+            	}*/
                 $absolute_url = $seed_url . '/' . $urlname;
             }
 
         
-            if($absolute_url[0] != '#' and /*strpos($absolute_url, 'coep.org.in') !== false and*/ strpos($absolute_url, 'foss.coep.org.in') == false) { 
+            if($absolute_url[0] != '#' and strpos($absolute_url, 'coep.org.in') !== false and strpos($absolute_url, 'foss.coep.org.in') == false) { 
 		# if URL is anchor tag, then ignore because it eventually refers the same page.
 		# if URL is inside COEP website, then only push it to array
                 array_push($links, $absolute_url);
