@@ -58,17 +58,19 @@ for($x = 0; $x < count($links); $x++) {
 	$links = get_links($links[$x], $links);
 }
 #print_r($links);
-
-# Writing to output file :-
-$arrlength = count($links);
-$myfile = fopen("urls.txt", "w");
-for($x = 0; $x < $arrlength && $x < $crawling_depth; $x++) {
-    #echo $links[$x];
-    fwrite($myfile, $links[$x]);
-    fwrite($myfile, "\n");
-}
 fclose($myfile);
 #here, we have base links
 #add these to queue and go more deep
 #collect all the possible links that we can grab
+
+#testing elasticsearch API:
+$ch = curl_init();
+$url = "http://localhost:9200/url-test/document/1?pretty=true";
+$param = "{ \"title\" : \"myWebsite\", \"link\" : \"https://tusharagey.github.io/Test\", \"content\" : \"Small with URL https://tusharagey.github.io/Test.\" }";
+curl_setopt($ch, CURLOPT_URL ,$url);
+curl_setopt($ch, CURLOPT_HEADER, 0);
+curl_setopt($ch, CURLOPT_POSTFIELDS, $param);
+$result = curl_exec($ch);
+echo $result;
+curl_close($ch);
 ?>

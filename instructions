@@ -1,0 +1,82 @@
+#This file contains all the configurations for the elasticsearch instance
+#These configurations form the basis of the search engine.
+
+1)Create the index using 
+curl -s -XPUT 'http://localhost:9200/url-test/' -d '{
+  "mappings": {
+    "document": {
+      "properties": {
+        "content": {
+          "type": "string",
+          "analyzer" : "lowercase_with_stopwords"
+        }
+      }
+    }
+  },
+  "settings" : {
+    "index" : {
+      "number_of_shards" : 1,
+      "number_of_replicas" : 0
+    },
+    "analysis": {
+      "filter" : {
+        "stopwords_filter" : {
+          "type" : "stop",
+          "stopwords" : ["http", "https", "ftp", "www"]
+        }
+      },
+      "analyzer": {
+        "lowercase_with_stopwords": {
+          "type": "custom",
+          "tokenizer": "lowercase",
+          "filter": [ "stopwords_filter" ]
+        }
+      }
+    }
+  }
+}' ;
+
+2)the url-test can be replaced with the name of the index that you would like to use.
+list of stopwords can be improved. Above code is very easy to understand.
+
+3)Use followig code to insert data into the index 'url-test'
+Syntax:
+PUT /<INDEX_NAME>/<INDEX_TYPE>/<ID>
+
+PUT /url-test/document/1?pretty=true
+{
+  "title" : "myWebsite",
+  "link" : "https://tusharagey.github.io/Test",
+  "content" : "Small content with URL https://tusharagey.github.io/Test."
+}
+
+4)The ID is expected to change for each document we index.
+document = "html page or pdf or any content possible"
+
+5)The fields: title : Title of the search item
+			  link : Link to the page
+			  content : data to be indexed.
+
+6)Now, after doing these basic configurations, index.php(our crawler) can be invoked and can be used to feed all the title, urls and content to this index.
+
+Next Tasks:
+
+1)using sample code from line 76, feed each data fetched by crawler to elasticsearch.
+2)using similar code, write the search API
+Search works using this:
+
+GET /url-test/_search?pretty
+{
+  "query" : {
+    "query_string" : {
+        "query" : "some query"
+    }
+  }
+}
+
+3)Using this, a JSON is returned. From this JSON, the task is to display the search results in suitable format
+(Note: create a Drupal plugin for this search UI/API)
+4)Improve the crawler
+
+
+*** crawler and indexer will run on the same machine. Search API will run on drupal (just calling the elasticsearch url and getting the results back) ***
