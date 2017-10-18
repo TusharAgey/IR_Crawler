@@ -1,10 +1,13 @@
 <?php
-$seed_url = "https://tusharagey.github.io/Test";
-#$seed_url = "http://www.coep.org.in";
+#$seed_url = "https://tusharagey.github.io/Test";
+$seed_url = "http://www.coep.org.in";
 
 #Empty array to hold all links to return
 $links = array();
 $crawling_depth = 100; #manual definition of crawling depth
+
+$myfile = fopen("urls.txt", "w");
+
 function get_links($url, $links) {
     #Create a new DOM Document to hold our webpage structure
     $xml = new DOMDocument();
@@ -21,22 +24,31 @@ function get_links($url, $links) {
             if (strpos($urlname, 'http') !== false) { #if URL contains http or https, its absolute url. don't modify
                 $absolute_url = $urlname;
             }
-            else{ 
-                $absolute_url = $seed_url . '/' . $urlname;
+            else{
+            	if($urlname[strlen($urlname) - 1] == '/'){		# If the relative url ends with a '/', don't add that '/'
+					$absolute_url = $seed_url . '/' . rtrim($urlname, '/');# This probably caused some double '/'s in url which we saw that day in lab
+            	}
+            	else{
+					$absolute_url = $seed_url . '/' . $urlname;
+            	}
             }
-    		#echo $absolute_url;
-            if($absolute_url[0] != '#'){ #if URL is anchor tag, then ignore because it eventually referes the same page.
+			if($absolute_url[0] != '#' and strpos($absolute_url, 'javascript') == false and strpos($absolute_url, 'coep.org.in') !== false and strpos($absolute_url, 'foss.coep.org.in') == false) { 
+				# if URL is anchor tag, then ignore because it eventually refers the same page.
+				# if URL is inside COEP website, then only push it to array
                 array_push($links, $absolute_url);
                 echo $absolute_url;
+				echo "\n";
+		
+				# Writing to output file :
+				global $myfile;
+				fwrite($myfile, $absolute_url);
+				fwrite($myfile, "\n");
             }
-    	    #$links[] = array('url' => $link->getAttribute('href'), 'text' => $link->nodeValue);
-            #Just ignore the above commented line
     	}
     }
     //Return the links
     return $links;
 }
-
 $links = get_links($seed_url, $links);
 #print_r($links);
 
@@ -49,9 +61,7 @@ for($x = 0; $x < count($links); $x++) {
 
 # Writing to output file :-
 $arrlength = count($links);
-
 $myfile = fopen("urls.txt", "w");
-
 for($x = 0; $x < $arrlength && $x < $crawling_depth; $x++) {
     #echo $links[$x];
     fwrite($myfile, $links[$x]);
