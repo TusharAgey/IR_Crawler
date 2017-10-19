@@ -1,0 +1,6 @@
+copy this folder to drupal/sites/all/modules under your drupal directory in /var/www/html/
+Please use drupal 7.56 version for this.
+after copying, go to modules menue in drupal installation (using browser).
+check the elasticsearch checkbox and then go to Configuration->performance->clear cache
+Then visit yoursite/elasticsearch/search page to see this search page in action.
+

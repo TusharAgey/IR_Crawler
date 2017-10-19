@@ -1,0 +1,5 @@
+name = Elasticsearch
+description = Elasticsearch API for better search results
+core = 7.x
+regions[content] = 'content' ;;
+files[] = elasticsearch.module

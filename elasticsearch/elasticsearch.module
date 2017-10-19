@@ -1,0 +1,36 @@
+<?php
+function elasticsearch_menu() {
+    $items = array();
+
+    $items['elasticsearch/search'] = array(
+        'title' => 'Search COEP Website',
+        'page callback' => 'perform_search',
+        'access arguments' => array('access content'),
+        'type' => MENU_CALLBACK,
+     );
+
+    return $items;
+}
+
+function search_it($query){
+	return $query;
+}
+
+function perform_search() {
+    $vars = array();
+    $vars['type']="ul";
+    $vars['title'] = "";
+    $vars['attributes']=array("");
+    $vars['items'][0]="<form action = \"http://localhost/mysite/drupal/elasticsearch/search\"><input name = \"query\" type = \"Text\" placeholder=\"Enter the query\"> </input><br/><input type = \"submit\"></input></form>";
+    //Ajinkya, please improve the UI here.
+    //Try returning a random JSON object from search_it function and try to display its content as any good search results should look.
+    //This is just a baseline I have created.
+
+    if($_GET['query']){
+    	$vars['items'][1] = search_it($_GET['query']);
+    }
+    //create a search UI
+    //input a search query and if input query is available, call 'search_it(query) function and results are then displayed'
+
+    return theme_item_list($vars);
+}
