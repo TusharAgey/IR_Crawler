@@ -9,7 +9,7 @@ elasticsearch/elasticsearch.module:
 		i)Line number 40: change form action value to http://localhost/drupal/?q=elasticsearch/search
 		ii)add another tab: <input type=\"hidden\" name=\"q\" value=\"elasticsearch/search\"></input>
 		i.e. line number 40 will look like:
-		$vars['items'][0]="<form action = \"http://localhost/drupal/?q=elasticsearch/search\"><input type=\"hidden\" name=\"q\" value=\"elasticsearch/search\"></input><input name = \"query\" type = \"Text\" placeholder=\"Enter the query\"> </input><br/><input type = \"submit\"></input></form> <div id = \"search_results\"></div>";
+		$vars['items'][0]="<form action = \"http://localhost/drupal/?q=elasticsearch/search\"><input type=\"hidden\" name=\"q\" value=\"elasticsearch/search\"></input><input name = \"query\" type = \"Text\" placeholder=\"Enter the query\"> </input><br/><input type = \"submit\"></input></form> <div id = \"search_results\"></div>"
 
 	2)if you are able to access site using localhost/drupal/elasticsearch/search:
 		i)Line number 40: change form action value to http://localhost/drupal/elasticsearch/search
