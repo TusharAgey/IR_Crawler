@@ -25,10 +25,9 @@ function get_links($url, & $links) {					# '&' indicates pass by reference
     	$title_str = fixString(trim($title->nodeValue)); #, PHP_EOL; trim for removing any whitespaces/unknown characters around the string
     }
     
-    $body_tags = $xml->getElementsByTagName('body');
-    foreach ($body_tags as $body) {
-    	$body_content = fixString(trim($body->nodeValue)); #, PHP_EOL;
-    }
+    $body = $xml->getElementById('main-wrapper'); #ignore the header/footer and only include important and unique section.
+	$body_content = fixString(trim($body->nodeValue)); #, PHP_EOL;
+
     
     # Elastic search code :-
     $ch = curl_init();
