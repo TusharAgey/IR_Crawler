@@ -1,6 +1,11 @@
-copy this folder to drupal/sites/all/modules under your drupal directory in /var/www/html/
-Please use drupal 7.56 version for this.
-after copying, go to modules menue in drupal installation (using browser).
-check the elasticsearch checkbox and then go to Configuration->performance->clear cache
-Then visit yoursite/elasticsearch/search page to see this search page in action.
-
+1)Download LAMP stack for drupal configuration using sudo apt-get install lamp-server^
+2)download drupal 7.56 and put it in the /var/www/html directory
+3)now, the drupal installation should look like /var/www/html/drupal
+(drupal-7.56.zip when extracted, I have renamed the folder to drupal)
+4)access localhost/drupal on the browser
+5)copy elasticsearch folder to /var/www/html/drupal/sites/all/modules
+6)after copying, go to modules menue in drupal installation (using browser : localhost/drupal).
+7)check the elasticsearch checkbox and then go to Configuration->performance->clear cache
+8)Then visit localhost/drupal/elasticsearch/search page to see this search page in action.
+(if step 8 doesn't work, use following url:)
+localhost/drupal/?q=elasticsearch/search
