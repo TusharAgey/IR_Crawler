@@ -76,7 +76,8 @@ GET /url-test/_search?pretty
 
 3)Using this, a JSON is returned. From this JSON, the task is to display the search results in suitable format
 (Note: create a Drupal plugin for this search UI/API)
-4)Improve the crawler
+4)The file cron.php is a way in drupal for for scheduling the task of crawling.
+replacing the default cron.php in drupal installation directory with this cron.php will work.
 
 
 *** crawler and indexer will run on the same machine. Search API will run on drupal (just calling the elasticsearch url and getting the results back) ***
