@@ -6,10 +6,18 @@ function elasticsearch_menu() {
         'title' => 'Search COEP Website',
         'page callback' => 'perform_search',
         'access arguments' => array('access content'),
-        'type' => MENU_CALLBACK,
+        //'type' => MENU_CALLBACK,
+        'access callback' => TRUE
      );
 
     return $items;
+}
+
+function mylog($logstring){
+    $logfile = fopen(drupal_get_path('module', 'elasticsearch').'/log.txt', 'a');
+    fwrite($logfile, $logstring);
+    fwrite($logfile, "\n");
+    fclose($logfile);
 }
 
 function search_it($query){
@@ -17,17 +25,22 @@ function search_it($query){
 	$host = 'localhost:9200';
 	if($socket =@ fsockopen($host, 9200, $errno, $errstr, 30)) { #checking if the search engine is working and online
 		fclose($socket);
+		//echo $query;
 		$url = "http://localhost:9200/url-test/_search?pretty";
 		$param = "{\"query\" : {\"query_string\" : { \"query\" : \"$query\"}}}";
 		curl_setopt($ch, CURLOPT_URL ,$url);
 		curl_setopt($ch, CURLOPT_HEADER, 0);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $param);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+		/*Authentication will be required for POST requests*/
+		curl_setopt($ch, CURLOPT_USERPWD, 'elastic:changeme');
 		$result = curl_exec($ch);
+		//echo print_r($result, true);
 		curl_close($ch);
 		return $result;
 	}
 	else {
+		echo "Search engine seems offline";
 		return "Search engine seems offline";
 	}
 }
@@ -37,13 +50,15 @@ function perform_search() {
     $vars['type']="div";
     $vars['title'] = "";
     $vars['attributes']=array("");
-    $vars['items'][0]="<form action = \"http://localhost/drupal/elasticsearch/search\"><input name = \"query\" type = \"Text\" placeholder=\"Enter the query\"> </input><br/><input type = \"submit\"></input></form> <div id = \"search_results\"></div>";
+    //$vars['items'][0]="<form action = \"http://localhost/drupal/elasticsearch/search\"><input name = \"query\" type = \"Text\" placeholder=\"Enter the query\"> </input><br/><input type = \"submit\"></input></form> <div id = \"search_results\"></div>";
+    $vars['items'][0]="<form action = \"search\"><input name = \"query\" type = \"Text\" placeholder=\"Enter the query\"> </input><br/><input type = \"submit\"></input></form> <div id = \"search_results\"></div>";
     //Ajinkya, please improve the UI here.
     //Try returning a random JSON object from search_it function and try to display its content as any good search results should look.
     //This is just a baseline I have created.
 
     if(array_key_exists('query', $_GET)){
     	$data = search_it($_GET['query']);
+		
     	$vars['items'][1] = "<script type = 'text/javascript'>
     						var JSDATA = ". json_encode($data, JSON_HEX_TAG | JSON_HEX_AMP ) . ";
     						newVar = JSON.parse(JSDATA);
@@ -62,4 +77,43 @@ function perform_search() {
     //input a search query and if input query is available, call 'search_it(query) function and results are then displayed'
 
     return theme_item_list($vars);
+}
+
+function elasticsearch_search_execute($keys = NULL, $conditions = NULL){
+    
+    $data = search_it($keys);
+    $jdata = json_decode($data, TRUE);
+    mylog(print_r($jdata['hits']['hits'], true));
+    
+    $results = [];
+    
+    foreach ($jdata['hits']['hits'] as $key => $value) {
+        
+            //mylog(print_r($value[$key], true));
+            $results[] = array(
+                'link' => $value['_source']['link'],
+                'type' => 'Article',
+                'title' => $value['_source']['title'],
+                'user' => NULL,
+                'date' => NULL,
+                'node' => 'node',
+                'extra' => 'date',
+                'score' => $value['_score'],
+                'snippet' => substr($value['_source']['content'], 0, 500),
+            );
+        
+        
+    }
+    return $results;
+}
+
+function elasticsearch_search_info(){
+    
+    t('ElasticSearch Info Hook');
+
+    return array(
+      'title' => 'Content',
+      'path' => 'node',
+      'conditions_callback' => 'callback_search_conditions',
+    );
 }
