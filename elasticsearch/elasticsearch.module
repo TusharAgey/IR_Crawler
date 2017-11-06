@@ -50,12 +50,8 @@ function perform_search() {
     $vars['type']="div";
     $vars['title'] = "";
     $vars['attributes']=array("");
-    //$vars['items'][0]="<form action = \"http://localhost/drupal/elasticsearch/search\"><input name = \"query\" type = \"Text\" placeholder=\"Enter the query\"> </input><br/><input type = \"submit\"></input></form> <div id = \"search_results\"></div>";
     $vars['items'][0]="<form action = \"search\"><input name = \"query\" type = \"Text\" placeholder=\"Enter the query\"> </input><br/><input type = \"submit\"></input></form> <div id = \"search_results\"></div>";
-    //Ajinkya, please improve the UI here.
-    //Try returning a random JSON object from search_it function and try to display its content as any good search results should look.
-    //This is just a baseline I have created.
-
+    
     if(array_key_exists('query', $_GET)){
     	$data = search_it($_GET['query']);
 		
