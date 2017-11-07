@@ -27,7 +27,7 @@ function search_it($query){
 		fclose($socket);
 		//echo $query;
 		$url = "http://localhost:9200/url-test/_search?pretty";
-		$param = "{\"query\" : {\"query_string\" : { \"query\" : \"$query\"}}}";
+		$param = "{\"query\" : {\"match_phrase\" : { \"content\" : \"$query\"}},\"highlight\": {\"fields\" : {\"content\" : {}}}}";
 		curl_setopt($ch, CURLOPT_URL ,$url);
 		curl_setopt($ch, CURLOPT_HEADER, 0);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $param);
@@ -63,7 +63,7 @@ function perform_search() {
     						var result_data = '';
     						for(count = 0; count < len; count++){
     							result_data += '<a target=\"_blank\" href = \"' + newVar['hits']['hits'][count]['_source']['link'] + '\" ><h2>' + newVar['hits']['hits'][count]['_source']['title'] + '</h2></a>'
-    							result_data += '<h3>' + newVar['hits']['hits'][count]['_source']['content'].slice(0, 500) + '</h3> <br/>'
+    							result_data += '<h3>' + newVar['hits']['hits'][count]['highlight']['content'].slice(0, 500) + '</h3> <br/>'
     						}
 				            document.getElementById('search_results').innerHTML = result_data;
 				    		</script>";
