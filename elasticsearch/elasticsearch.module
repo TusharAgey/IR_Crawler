@@ -50,7 +50,7 @@ function perform_search() {
     $vars['type']="div";
     $vars['title'] = "";
     $vars['attributes']=array("");
-   $vars['items'][0]="<form action = \"http://localhost/drupal/?q=elasticsearch/search\"><input type=\"hidden\" name=\"q\" value=\"elasticsearch/search\"></input><input name = \"query\" type = \"Text\" placeholder=\"Enter the query\"> </input><br/><input type = \"submit\"></input></form> <div id = \"search_results\"></div>";
+    $vars['items'][0]="<form action = \"http://localhost/drupal/?q=elasticsearch/search\"><input type=\"hidden\" name=\"q\" value=\"elasticsearch/search\"></input><input name = \"query\" type = \"Text\" placeholder=\"Enter the query\"> </input><br/><input type = \"submit\"></input></form> <div id = \"search_results\"></div>";
     
     if(array_key_exists('query', $_GET)){
     	$data = search_it($_GET['query']);
