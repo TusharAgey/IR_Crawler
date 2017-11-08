@@ -29,13 +29,14 @@ curl -s -XPUT 'http://localhost:9200/url-test/' -d '{
         "lowercase_with_stopwords": {
           "type": "custom",
           "tokenizer": "lowercase",
-          "filter": [ "stopwords_filter" ]
+          "filter": [ "stopwords_filter","porter_stem"]
         }
       }
     }
   }
 }' ;
 
+(Above code handles both, stopwords and stemming of the content)
 2)the url-test can be replaced with the name of the index that you would like to use.
 list of stopwords can be improved. Above code is very easy to understand.
 
