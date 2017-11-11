@@ -84,7 +84,10 @@ function elasticsearch_search_execute($keys = NULL, $conditions = NULL){
     $results = [];
     
     foreach ($jdata['hits']['hits'] as $key => $value) {
-        
+            $data = "";
+            foreach ($value['highlight']['content'] as $val) {
+                $data = $data." ".$val;
+            }
             //mylog(print_r($value[$key], true));
             $results[] = array(
                 'link' => $value['_source']['link'],
@@ -95,7 +98,7 @@ function elasticsearch_search_execute($keys = NULL, $conditions = NULL){
                 'node' => 'node',
                 'extra' => 'date',
                 'score' => $value['_score'],
-                'snippet' => substr($value['_source']['content'], 0, 500),
+                'snippet' => $data,
             );
         
         
