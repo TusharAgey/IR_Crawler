@@ -53,6 +53,12 @@ function perform_search() {
     $vars['items'][0]="<form action = \"http://localhost/drupal/?q=elasticsearch/search\"><input type=\"hidden\" name=\"q\" value=\"elasticsearch/search\"></input><input name = \"query\" type = \"Text\" placeholder=\"Enter the query\"> </input><br/><input type = \"submit\"></input></form> <div id = \"search_results\"></div>";
     
     if(array_key_exists('query', $_GET)){
+	$test = $_GET['query'];
+	$suggestions = suggest($test);
+	if (!empty($suggestions)) {
+    		print("Do you mean - ");
+		print_r(array_values($suggestions));
+	} 
     	$data = search_it($_GET['query']);
 		
     	$vars['items'][1] = "<script type = 'text/javascript'>
@@ -74,6 +80,28 @@ function perform_search() {
 
     return theme_item_list($vars);
 }
+
+//function for spellchecking and sugessions 
+function suggest($string)
+    {
+        $suggestions = array();
+
+        // Suggests possible words in case of misspelling
+        $config_dic = pspell_config_create('en');
+
+        // Ignore words under 2 characters
+        pspell_config_ignore($config_dic, 2);
+
+        // Configure the dictionary
+        pspell_config_mode($config_dic, PSPELL_FAST);
+        $dictionary = pspell_new_config($config_dic);
+
+        if (!pspell_check($dictionary, $string)) {
+            $suggestions = pspell_suggest($dictionary, $string);
+        }
+
+        return $suggestions;
+    }
 
 function elasticsearch_search_execute($keys = NULL, $conditions = NULL){
     
