@@ -8,5 +8,4 @@
 
 4. Now go to the aspell directory:
 	 cd /usr/lib/aspell/
-
 5. Then edit: sudo vi en.multi and add this line: add dictionary.rws
