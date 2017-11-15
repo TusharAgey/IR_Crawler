@@ -79,6 +79,17 @@ GET /url-test/_search?pretty
 (Note: create a Drupal plugin for this search UI/API)
 4)The file cron.php is a way in drupal for for scheduling the task of crawling.
 replacing the default cron.php in drupal installation directory with this cron.php will work.
+5)For enabling the suggestions over query, follow:
+i. Install Pspell using following command;
+  sudo apt-get install php7.0-pspell
 
+ii. Create a file called dictionary.txt in your home directory. This file contains the keywords related with "coep" which normal english dictionary doesn't have. So the newly added words will be available in our spell checker application.
+
+iii. Install the text file in aspell:
+  sudo aspell --lang=en create master /usr/lib/aspell/dictionary.rws < dictionary.txt
+
+iv. Now go to the aspell directory:
+   cd /usr/lib/aspell/
+v. Then edit: sudo vi en.multi and add this line: add dictionary.rws
 
 *** crawler and indexer will run on the same machine. Search API will run on drupal (just calling the elasticsearch url and getting the results back) ***
